@@ -47,7 +47,7 @@ public class PageReplacement {
         this.page_faults = 0;
     }
 
-    public void simulateFIFO(int[] pages) {
+    public int simulateFIFO(int[] pages) {
         this.reset();
 
         for (int page : pages) {
@@ -61,9 +61,10 @@ public class PageReplacement {
             System.out.println("FIFO Frames: " + fifo_frames);
         }
         System.out.println("Total Page Faults: " + page_faults);
+        return page_faults;
     }
 
-    public void simulateLRU(int[] pages) {
+    public int simulateLRU(int[] pages) {
         this.reset();
 
         for (int page : pages) {
@@ -78,9 +79,10 @@ public class PageReplacement {
             System.out.println("LRU Frames: " + lru_frames.keySet());
         }
         System.out.println("Total Page Faults (LRU): " + page_faults);
+        return page_faults;
     }
 
-    public void simulateClock(int[] pages) {
+    public int simulateClock(int[] pages) {
         this.reset();
 
         for (int page : pages) {
@@ -106,9 +108,10 @@ public class PageReplacement {
             System.out.println("Clock Frames: " + clock_frames);
         }
         System.out.println("Total Page Faults (Clock): " + page_faults);
+        return page_faults;
     }
 
-    public void simulateOptimal(int[] pages) {
+    public int simulateOptimal(int[] pages) {
         this.reset();
         List<Integer> optimal_frames = new ArrayList<>(Collections.nCopies(page_size, -1));
 
@@ -150,9 +153,10 @@ public class PageReplacement {
             System.out.println("Optimal Frames: " + optimal_frames);
         }
         System.out.println("Total Page Faults (Optimal): " + page_faults);
+        return page_faults;
     }
 
-    public void simulateNFU(int[] pages) {
+    public int simulateNFU(int[] pages) {
         this.reset();
         List<Integer> nfuFrames = new ArrayList<>(Collections.nCopies(page_size, -1));
 
@@ -179,9 +183,10 @@ public class PageReplacement {
             System.out.println("NFU Frames: " + nfuFrames);
         }
         System.out.println("Total Page Faults (NFU): " + page_faults);
+        return page_faults;
     }
 
-    public void simulateAging(int[] pages) {
+    public int simulateAging(int[] pages) {
         this.reset();
         List<Integer> agingFrames = new ArrayList<>(Collections.nCopies(page_size, -1));
 
@@ -214,6 +219,7 @@ public class PageReplacement {
             System.out.println("Aging Frames: " + agingFrames + ", Counters: " + agingCounters);
         }
         System.out.println("Total Page Faults (Aging): " + page_faults);
+        return page_faults;
     }
 
     private void reset() {
