@@ -3,7 +3,7 @@ package org.example;
 import java.util.*;
 
 public class PageReplacement {
-    private final int page_size;
+    private final int frame_count;
     private int page_faults;
 
     // FIFO
@@ -24,17 +24,17 @@ public class PageReplacement {
     private final Map<Integer, Integer> agingCounters;
 
 
-    public PageReplacement(int page_size) {
-        this.page_size = page_size;
+    public PageReplacement(int frame_count) {
+        this.frame_count = frame_count;
 
         // FIFO
         this.fifo_frames = new LinkedList<>();
 
         // LRU
-        this.lru_frames = new LinkedHashMap<>(page_size, 0.75f, true);
+        this.lru_frames = new LinkedHashMap<>(frame_count, 0.75f, true);
 
         // CLOCK
-        this.clock_frames = new ArrayList<>(Collections.nCopies(page_size, -1));
+        this.clock_frames = new ArrayList<>(Collections.nCopies(frame_count, -1));
         this.reference_bits = new HashMap<>();
         this.clock_pointer = 0;
 
@@ -53,7 +53,7 @@ public class PageReplacement {
         for (int page : pages) {
             if (!fifo_frames.contains(page)) {
                 page_faults++;
-                if (fifo_frames.size() == page_size) {
+                if (fifo_frames.size() == frame_count) {
                     fifo_frames.poll();
                 }
                 fifo_frames.add(page);
@@ -70,7 +70,7 @@ public class PageReplacement {
         for (int page : pages) {
             if (!lru_frames.containsKey(page)) {
                 page_faults++;
-                if (lru_frames.size() == page_size) {
+                if (lru_frames.size() == frame_count) {
                     int lruPage = lru_frames.keySet().iterator().next();
                     lru_frames.remove(lruPage);
                 }
@@ -94,12 +94,12 @@ public class PageReplacement {
 
                         clock_frames.set(clock_pointer, page);
                         reference_bits.put(page, true);
-                        clock_pointer = (clock_pointer + 1) % page_size; // Move clock pointer
+                        clock_pointer = (clock_pointer + 1) % frame_count; // Move clock pointer
                         break;
                     } else {
                         // If the page has a reference bit of 1, clear it and move the pointer
                         reference_bits.put(currentPage, false);
-                        clock_pointer = (clock_pointer + 1) % page_size;
+                        clock_pointer = (clock_pointer + 1) % frame_count;
                     }
                 }
             } else {
@@ -113,7 +113,7 @@ public class PageReplacement {
 
     public int simulateOptimal(int[] pages) {
         this.reset();
-        List<Integer> optimal_frames = new ArrayList<>(Collections.nCopies(page_size, -1));
+        List<Integer> optimal_frames = new ArrayList<>(Collections.nCopies(frame_count, -1));
 
         for (int i = 0; i < pages.length; i++) {
             int page = pages[i];
@@ -158,7 +158,7 @@ public class PageReplacement {
 
     public int simulateNFU(int[] pages) {
         this.reset();
-        List<Integer> nfuFrames = new ArrayList<>(Collections.nCopies(page_size, -1));
+        List<Integer> nfuFrames = new ArrayList<>(Collections.nCopies(frame_count, -1));
 
         for (int page : pages) {
             nfu_frequency.put(page, nfu_frequency.getOrDefault(page, 0) + 1);
@@ -188,7 +188,7 @@ public class PageReplacement {
 
     public int simulateAging(int[] pages) {
         this.reset();
-        List<Integer> agingFrames = new ArrayList<>(Collections.nCopies(page_size, -1));
+        List<Integer> agingFrames = new ArrayList<>(Collections.nCopies(frame_count, -1));
 
         for (int page : pages) {
             // Update counters by shifting them to the right
@@ -229,7 +229,7 @@ public class PageReplacement {
 
         lru_frames.clear();
 
-        clock_frames = new ArrayList<>(Collections.nCopies(page_size, -1));
+        clock_frames = new ArrayList<>(Collections.nCopies(frame_count, -1));
         clock_pointer = 0;
         reference_bits.clear();
 

@@ -9,10 +9,10 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        int page_size = 3;
-        int[] pages = {7, 0, 1, 2, 0, 3, 0, 4};
+        int frame_count = 3;
+        int[] pages = {1, 2, 3, 4, 2, 1, 5, 3, 2, 4, 6};
 
-        PageReplacement simulator = new PageReplacement(page_size);
+        PageReplacement simulator = new PageReplacement(frame_count);
 
         System.out.println("FIFO Simulation:");
         int fifo_fault = simulator.simulateFIFO(pages);
