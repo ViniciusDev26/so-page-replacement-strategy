@@ -175,9 +175,8 @@ public class PageReplacement {
                             leastUsedPage = p;
                         }
                     }
-                    // Replace the least frequently used page
                     nfuFrames.set(nfuFrames.indexOf(leastUsedPage), page);
-                    nfu_frequency.remove(leastUsedPage); // Reset frequency of the replaced page
+                    nfu_frequency.remove(leastUsedPage);
                 }
             }
             System.out.println("NFU Frames: " + nfuFrames);
@@ -199,9 +198,8 @@ public class PageReplacement {
                 if (agingFrames.contains(-1)) {
                     int emptySlot = agingFrames.indexOf(-1);
                     agingFrames.set(emptySlot, page);
-                    agingCounters.put(page, 1 << 7); // Set the MSB for new page
+                    agingCounters.put(page, 1 << 7);
                 } else {
-                    // Find the page with the smallest aging counter
                     int oldestPage = agingFrames.getFirst();
                     for (int p : agingFrames) {
                         if (agingCounters.getOrDefault(p, Integer.MAX_VALUE) < agingCounters.get(oldestPage)) {
@@ -210,10 +208,9 @@ public class PageReplacement {
                     }
                     agingFrames.set(agingFrames.indexOf(oldestPage), page);
                     agingCounters.remove(oldestPage);
-                    agingCounters.put(page, 1 << 7); // Set MSB for the new page
+                    agingCounters.put(page, 1 << 7);
                 }
             } else {
-                // If page is already in frames, set its MSB
                 agingCounters.put(page, (agingCounters.get(page) >> 1) | (1 << 7));
             }
             System.out.println("Aging Frames: " + agingFrames + ", Counters: " + agingCounters);
